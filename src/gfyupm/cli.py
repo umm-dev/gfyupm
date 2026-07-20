@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import shlex
 import subprocess
 import sys
@@ -11,6 +12,13 @@ from .config import read_default, write_default
 from .managers import MANAGERS, available, default_manager
 
 ACTIONS = ("install", "remove", "update", "upgrade", "search", "info", "list", "clean")
+ROOT_ACTIONS = {"install", "remove", "update", "upgrade", "clean"}
+SYSTEM_MANAGERS = {
+    "apk", "apt", "aptitude", "dnf", "emerge", "eopkg", "microdnf", "nala",
+    "opkg", "pacman", "pamac", "paru", "pkg", "pkg_add", "pkgin", "port",
+    "rpm-ostree", "slackpkg", "snap", "swupd", "tazpkg", "tdnf", "urpmi", "xbps",
+    "yay", "yum", "zypper",
+}
 
 
 def parser() -> argparse.ArgumentParser:
@@ -32,6 +40,15 @@ def resolve(name: str | None):
     if name:
         return MANAGERS[name]
     return default_manager(read_default())
+
+
+def needs_sudo(manager_name: str, action: str) -> bool:
+    """Whether a native system package mutation needs elevation."""
+    return (
+        manager_name in SYSTEM_MANAGERS
+        and action in ROOT_ACTIONS
+        and getattr(os, "geteuid", lambda: 0)() != 0
+    )
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -64,6 +81,8 @@ def main(argv: list[str] | None = None) -> int:
     except ValueError as error:
         print(error, file=sys.stderr)
         return 2
+    if needs_sudo(manager.name, args.action):
+        command = ["sudo", *command]
     if args.dry_run:
         print(shlex.join(command))
         return 0
