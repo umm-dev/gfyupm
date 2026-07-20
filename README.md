@@ -39,6 +39,8 @@ gfyupm default apt
 
 `gfyupm` uses `GFYUPM_MANAGER`, then `~/.config/gfyupm/config.toml`, then available OS-native manager. `--manager` always wins.
 
+System package mutations automatically use `sudo` when needed. Run `gfyupm install cowsay`, not `sudo gfyupm install cowsay`.
+
 V1 supports 75 managers. Run `gfyupm managers` for full live registry and local availability.
 
 Commands remain native. Use native command directly for unsupported manager-specific behavior.
