@@ -5,6 +5,12 @@ Go Fuck Yourself Universal Package Manager. One boring Python CLI over native pa
 ## Install
 
 ```bash
+python3 -m pip install gfyupm
+```
+
+Before PyPI release, install local checkout:
+
+```bash
 python3 -m pip install .
 ```
 
@@ -27,3 +33,7 @@ gfyupm default apt
 V1 supports 75 managers. Run `gfyupm managers` for full live registry and local availability.
 
 Commands remain native. Use native command directly for unsupported manager-specific behavior.
+
+## Release
+
+See [PyPI release guide](docs/PYPI.md). Releases publish through GitHub Actions trusted publishing; no API token lives in repository.
