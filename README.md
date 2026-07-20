@@ -14,6 +14,15 @@ Before PyPI release, install local checkout:
 python3 -m pip install .
 ```
 
+Developer checks:
+
+```bash
+python3 -m pip install ".[dev]"
+python3 -m pytest -q
+python3 -m build
+python3 -m twine check dist/*
+```
+
 ## Use
 
 ```bash
